@@ -24,39 +24,46 @@ ctcolorr = None
 ctcolorb = None
 
 while True:
-    glow = pym.read_int(dwGlowObjectManager + client)
-    lp = pym.read_int(dwLocalPlayer + client)
-    lpt = pym.read_int(lp + m_iTeamNum) #local player's team
+    try:
+        glow = pym.read_int(dwGlowObjectManager + client)
+        lp = pym.read_int(dwLocalPlayer + client)
+        lpt = pym.read_int(lp + m_iTeamNum) #local player's team
 
-    if lpt == 2: #t
-        ctcolorr = 1
-        ctcolorb = 0
-        tcolorr = 0
-        tcolorb = 1
+        if lpt == 2: #t
+            ctcolorr = 1
+            ctcolorb = 0
+            tcolorr = 0
+            tcolorb = 1
 
-    elif lpt == 3: #ct
-        tcolorr = 1
-        tcolorb = 0 
-        ctcolorr = 0
-        ctcolorb = 1
+        elif lpt == 3: #ct
+            tcolorr = 1
+            tcolorb = 0 
+            ctcolorr = 0
+            ctcolorb = 1
 
-    for i in range(1, 20): #should be entities 1-10 but chickens fuck shit up   
-        player = pym.read_int(client + dwEntityList + i * 0x10)
+        for i in range(1, 20): #should be entities 1-10 but chickens fuck shit up   
+            player = pym.read_int(client + dwEntityList + i * 0x10)
 
-        if player:
-            team = pym.read_int(player + m_iTeamNum)
-            playerglow = pym.read_int(player + m_iGlowIndex)
+            if player:
+                team = pym.read_int(player + m_iTeamNum)
+                playerglow = pym.read_int(player + m_iGlowIndex)
 
-            if team == 2: #t
-                pym.write_float(glow + playerglow * 0x38 + 0x4, float(tcolorr)) #Red
-                pym.write_float(glow + playerglow * 0x38 + 0xC, float(tcolorb)) #Blue
-                pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
-                pym.write_int(glow + playerglow * 0x38 + 0x24, int(1)) 
+                if team == 2: #t
+                    pym.write_float(glow + playerglow * 0x38 + 0x4, float(tcolorr)) #Red
+                    pym.write_float(glow + playerglow * 0x38 + 0xC, float(tcolorb)) #Blue
+                    pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
+                    pym.write_int(glow + playerglow * 0x38 + 0x24, int(1)) 
                 
-            elif team == 3: #ct
-                pym.write_float(glow + playerglow * 0x38 + 0x4, float(ctcolorr)) #Red
-                pym.write_float(glow + playerglow * 0x38 + 0xC, float(ctcolorb)) #Blue
-                pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
-                pym.write_int(glow + playerglow * 0x38 + 0x24, int(1))  
+                elif team == 3: #ct
+                    pym.write_float(glow + playerglow * 0x38 + 0x4, float(ctcolorr)) #Red
+                    pym.write_float(glow + playerglow * 0x38 + 0xC, float(ctcolorb)) #Blue
+                    pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
+                    pym.write_int(glow + playerglow * 0x38 + 0x24, int(1))
+    except pymem.exception.MemoryReadError:
+        pass
+
+
+
+
 
 
