@@ -1,1 +1,3 @@
-A Basic Glowhack For CS:GO Written In Python 
+#A Python Based Glowhack For CS:GO.
+
+Toggle Using Right-Shift.
