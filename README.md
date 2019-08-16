@@ -1,7 +1,7 @@
 # A Python Based Glowhack For CS:GO.
 Requirements:
-* PyMem
-* Keyboard
-* Time
+* PyMem (pip install pymem)
+* Keyboard (pip install keyboard
+
 
 Toggle Using Right-Shift.
