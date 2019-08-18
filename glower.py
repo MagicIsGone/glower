@@ -27,13 +27,8 @@ except:
     sleep(3)
     exit()
 
-#color vars 
-tcolorr = None 
-tcolorb = None
-ctcolorr = None 
-ctcolorb = None
 
-def apply():
+def apply(): #save color scheme and toggle key
     global key, cscheme
     text = gui.line.text()
     pickle.dump(text, open("data//togglekey.dat", "wb"))
@@ -43,13 +38,13 @@ def apply():
     
 
 
-class main(QMainWindow):
+class main(QMainWindow): #ui class
     def __init__(self):
         super().__init__()
         self.initUI()
         self.restore()
     
-    def restore(self):
+    def restore(self): #restore the settings to the ui after launch
         tkey = pickle.load(open("data//togglekey.dat", "rb"))
         colorscheme = pickle.load(open("data//colorscheme.dat", "rb"))
         self.line.setText(tkey)
@@ -105,14 +100,20 @@ gui = main()
 key = pickle.load(open("data//togglekey.dat", "rb"))
 cscheme = pickle.load(open("data//colorscheme.dat", "rb"))
 
+#color vars 
+ctcolorr = 0
+ctcolorb = 0
+ctcolorg = 0
+tcolorr = 0
+tcolorb = 0
+tcolorg = 0
 
 
-
-def newthread():
+def newthread(): #create a new thread for glowfunc
     Thread(target=glowfunc).start()
 
 
-def glowfunc():
+def glowfunc(): #the glow
     while True:
         if keyboard.is_pressed(key):
             sleep(0.1)
@@ -131,7 +132,8 @@ def glowfunc():
                             tcolorb = 1
                             tcolorg = 0
 
-                        elif cscheme == "Orange & Green":
+                        else:
+
                             ctcolorr = 1
                             ctcolorb = 0
                             ctcolorg = 0.4
@@ -148,7 +150,8 @@ def glowfunc():
                             tcolorb = 0
                             tcolorg = 0
 
-                        elif cscheme == "Orange & Green":
+                        else:
+                            
                             ctcolorr = 0
                             ctcolorb = 0
                             ctcolorg = 1
@@ -167,19 +170,24 @@ def glowfunc():
                                 pym.write_float(glow + playerglow * 0x38 + 0x4, float(tcolorr)) #Red
                                 pym.write_float(glow + playerglow * 0x38 + 0xC, float(tcolorb)) #Blue
                                 pym.write_float(glow + playerglow * 0x38 + 0x8, float(tcolorg)) #Green
-                                pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
+                                pym.write_float(glow + playerglow * 0x38 + 0x10, float(1)) #Opacity
                                 pym.write_int(glow + playerglow * 0x38 + 0x24, int(1)) 
                             
                             elif team == 3: #ct
                                 pym.write_float(glow + playerglow * 0x38 + 0x4, float(ctcolorr)) #Red
                                 pym.write_float(glow + playerglow * 0x38 + 0xC, float(ctcolorb)) #Blue
                                 pym.write_float(glow + playerglow * 0x38 + 0x8, float(ctcolorg)) #Green
-                                pym.write_float(glow + playerglow * 0x38 + 0x10, float(0.8)) #Opacity
+                                pym.write_float(glow + playerglow * 0x38 + 0x10, float(1)) #Opacity
                                 pym.write_int(glow + playerglow * 0x38 + 0x24, int(1))      
                     
                                 
                 except pymem.exception.MemoryReadError:
-                    pass
+                    ctcolorr = 0
+                    ctcolorb = 0
+                    ctcolorg = 0
+                    tcolorr = 0
+                    tcolorb = 0
+                    tcolorg = 0
             
                 if keyboard.is_pressed(key):
                     sleep(0.1)
