@@ -9,6 +9,7 @@ import pymem.process
 from time import sleep
 import keyboard
 
+
 #offsets
 dwGlowObjectManager = (0x52470F0)
 dwEntityList = (0x4D06CB4)
@@ -23,8 +24,9 @@ try: #hook to csgo
     pym = pymem.Pymem("csgo.exe")
     client = pymem.process.module_from_name(pym.process_handle, "client_panorama.dll").lpBaseOfDll
 except:
-    print("CSGO was not detected, closing application.")
-    sleep(3)
+    import ctypes
+    MessageBox = ctypes.windll.user32.MessageBoxW
+    MessageBox(None, 'CS:GO Was Not Detected', 'glwr', 48)
     exit()
 
 
@@ -69,7 +71,6 @@ class main(QMainWindow): #ui class
         self.ls.addItem("Orange & Green")
         self.ls.setFont(QFont("Calibri", 9))
         
-
         t = QLabel("Toggle Key: ", self)
         t.move(5, 30)
         t.setFont(QFont("Calibri", 11))
@@ -110,7 +111,9 @@ tcolorg = 0
 
 
 def newthread(): #create a new thread for glowfunc
-    Thread(target=glowfunc).start()
+    nt = Thread(target=glowfunc)
+    nt.daemon = True
+    nt.start()
 
 
 def glowfunc(): #the glow
@@ -196,6 +199,7 @@ def glowfunc(): #the glow
 newthread()
     
 sys.exit(app.exec_())
+
     
 
 
